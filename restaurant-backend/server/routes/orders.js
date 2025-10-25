@@ -15,7 +15,7 @@ router.route('/')
     .post(protect, createOrder) // Protected
     .get(protect, admin, getAllOrders); // Admin only to get all orders
 
-router.route('/m  y')
+router.route('/my')
     .get(protect, getMyOrders); // Protected, get user's orders
 
 router.route('/:id')
