@@ -31,7 +31,7 @@ Install: npm install (or yarn install)
 
 .env File: Create .env in restaurant-backend with:
 
-PORT=5000
+PORT=5001
 MONGO_URI=mongodb+srv://<username>:<password>@<cluster-name>.mongodb.net/<database-name>?retryWrites=true&w=majority&appName=Cluster0
 JWT_SECRET=YOUR_VERY_STRONG_RANDOM_SECRET_KEY_HERE
 
@@ -59,4 +59,5 @@ Explore: Browse "Menu," "Reservations," and "Order Online" sections.
 Fork, pull requests, or issues are welcome.
 
 📄 License
+
 ISC License.
