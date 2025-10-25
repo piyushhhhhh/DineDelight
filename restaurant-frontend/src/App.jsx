@@ -151,6 +151,7 @@ const HomeIcon = () => (
 const Navbar = ({ currentPage, setCurrentPage }) => {
   const { user, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // State for mobile menu
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   const handleNavLinkClick = (page) => {
     setCurrentPage(page);
@@ -158,31 +159,79 @@ const Navbar = ({ currentPage, setCurrentPage }) => {
   };
 
   return (
-    <nav className="bg-gradient-to-r from-yellow-800 to-black p-4 shadow-xl rounded-b-xl animate-fadeInDown">
+    <nav className="bg-gradient-to-r from-yellow-800 to-black p-4 shadow-xl rounded-b-xl animate-fadeInDown z-50">
       <div className="container mx-auto flex justify-between items-center">
         <div className="text-white text-4xl font-extrabold font-inter tracking-wide transform hover:scale-105 transition-transform duration-300">
           <span className="text-orange-400">Dine</span>Delight
         </div>
         {/* Desktop Navigation */}
-        <div className="hidden md:flex space-x-6">
+        <div className="hidden lg:flex space-x-6">
           <NavLink icon={<HomeIcon />} text="Home" page="home" currentPage={currentPage} setCurrentPage={handleNavLinkClick} />
           <NavLink icon={<MenuIcon />} text="Menu" page="menu" currentPage={currentPage} setCurrentPage={handleNavLinkClick} />
           <NavLink icon={<CalendarIcon />} text="Reservations" page="reservations" currentPage={currentPage} setCurrentPage={handleNavLinkClick} />
           <NavLink icon={<ShoppingCartIcon />} text="Order Online" page="order" currentPage={currentPage} setCurrentPage={handleNavLinkClick} />
           {user ? (
-            <button
-              onClick={() => { logout(); handleNavLinkClick('home'); }}
-              className="flex items-center space-x-2 text-white hover:text-orange-400 transition-colors duration-300 transform hover:scale-105 px-3 py-2 rounded-lg bg-yellow-900 hover:bg-yellow-800 shadow-md"
-            >
-              <UserIcon />
-              <span>Logout ({user.username})</span>
-            </button>
+            <div className="relative">
+  <button
+    onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+    className="flex items-center space-x-2 text-white hover:text-orange-400 transition-colors duration-300 transform hover:scale-105 px-3 py-2 rounded-lg bg-yellow-900 hover:bg-yellow-800 shadow-md"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+    </svg>
+    <span>{user.username}</span>
+    <svg 
+      className={`w-4 h-4 transition-transform duration-200 ${isUserMenuOpen ? 'transform rotate-180' : ''}`}
+      fill="none" 
+      stroke="currentColor" 
+      viewBox="0 0 24 24" 
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+    </svg>
+  </button>
+  
+  {/* Dropdown menu */}
+  {isUserMenuOpen && (
+    <div className="fixed inset-0 z-[9999]">
+    <div 
+      className="absolute right-16 top-16 mt-2 w-48 bg-gray-900 rounded-md shadow-lg py-1"
+      onMouseLeave={() => setIsUserMenuOpen(false)}
+    >
+      <button
+        onClick={() => {
+          handleNavLinkClick('pastOrders');
+          setIsUserMenuOpen(false);
+        }}
+        className="flex items-center w-full px-4 py-2 text-sm text-gray-100 hover:text-gray-900 hover:bg-gray-100"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+        </svg>
+        Past Orders
+      </button>
+      <button
+        onClick={() => {
+          logout();
+          handleNavLinkClick('home');
+        }}
+        className="flex items-center w-full px-4 py-2 text-sm text-red-700 hover:bg-red-50"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+        </svg>
+        Logout
+      </button>
+    </div>
+    </div>
+  )}
+</div>
           ) : (
             <NavLink icon={<UserIcon />} text="Login" page="login" currentPage={currentPage} setCurrentPage={handleNavLinkClick} />
           )}
         </div>
         {/* Mobile Menu Button */}
-        <div className="md:hidden">
+        <div className="lg:hidden">
           <button className="text-white focus:outline-none text-2xl" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
             <MenuIcon />
           </button>
@@ -190,7 +239,7 @@ const Navbar = ({ currentPage, setCurrentPage }) => {
       </div>
       {/* Mobile Menu Dropdown */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-gray-900 bg-opacity-95 text-white flex flex-col items-center space-y-4 py-4 animate-slideInDownFast">
+        <div className="lg:hidden bg-gray-900 bg-opacity-95 text-white flex flex-col items-center space-y-4 py-4 animate-slideInDownFast">
           <NavLink icon={<HomeIcon />} text="Home" page="home" currentPage={currentPage} setCurrentPage={handleNavLinkClick} />
           <NavLink icon={<MenuIcon />} text="Menu" page="menu" currentPage={currentPage} setCurrentPage={handleNavLinkClick} />
           <NavLink icon={<CalendarIcon />} text="Reservations" page="reservations" currentPage={currentPage} setCurrentPage={handleNavLinkClick} />
@@ -215,7 +264,7 @@ const Navbar = ({ currentPage, setCurrentPage }) => {
 const NavLink = ({ icon, text, page, currentPage, setCurrentPage }) => (
   <button
     onClick={() => setCurrentPage(page)}
-    className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-semibold text-lg transition-all duration-300 transform hover:scale-105
+    className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-semibold text-base transition-all duration-300 transform hover:scale-105
       ${currentPage === page ? 'bg-orange-400 text-black shadow-lg' : 'text-white hover:bg-yellow-800 hover:text-orange-400'}`}
   >
     {icon}
@@ -995,6 +1044,163 @@ const OrderPage = () => {
   );
 };
 
+// PastOrdersPage component
+const PastOrdersPage = ({ setCurrentPage }) => {
+  const { user } = useAuth();
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch('http://localhost:5001/api/orders/pastOrders', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch orders');
+        }
+        
+        const data = await response.json();
+        setOrders(data);
+      } catch (err) {
+        setError(err.message || 'Error fetching orders');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (user) {
+      fetchOrders();
+    } else {
+      setLoading(false);
+    }
+  }, [user]);
+
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
+  if (!user) {
+    return (
+      <div className="container mx-auto p-6 text-center">
+        <h2 className="text-2xl font-bold mb-4">Please log in to view your orders</h2>
+        <button
+          onClick={() => setCurrentPage('login')}
+          className="bg-orange-600 text-white px-6 py-2 rounded-lg hover:bg-orange-700 transition-colors"
+        >
+          Login
+        </button>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="container mx-auto p-6 text-center">
+        <div className="animate-pulse">Loading your orders...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto p-6 text-center text-red-600">
+        Error: {error}
+      </div>
+    );
+  }
+
+  return (
+    <div className="container mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-8 text-center">Your Past Orders</h1>
+      
+      {orders.length === 0 ? (
+        <div className="text-center text-gray-600">
+          <p className="text-xl">You haven't placed any orders yet.</p>
+          <button
+            onClick={() => setCurrentPage('order')}
+            className="mt-4 bg-orange-600 text-white px-6 py-2 rounded-lg hover:bg-orange-700 transition-colors"
+          >
+            Order Now
+          </button>
+        </div>
+      ) : (
+       <div className="space-y-6">
+  {orders.map((order) => (
+    <div
+      key={order._id}
+      className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 border-l-4 border-orange-500"
+    >
+      <div className="flex justify-between items-start mb-4">
+        <div>
+          <h3 className="text-xl font-semibold text-gray-800">Order #{order._id.slice(-6).toUpperCase()}</h3>
+          <p className="text-sm text-gray-500">Placed on: {formatDate(order.orderDate)}</p>
+        </div>
+        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+          order.status === 'completed' ? 'bg-green-100 text-green-800' :
+          order.status === 'cancelled' ? 'bg-red-100 text-red-800' :
+          'bg-yellow-100 text-yellow-800'
+        }`}>
+          {(() => {switch(order.status) {
+            case 'pending':
+              return "Pending"
+            case 'confirmed':
+              return "Completed"
+            case 'preparing':
+              return "Preparing"
+            case 'out_for_delivery':
+              return "Out for Delivery"
+            case 'ready_for_pickup':
+              return "Ready for Pickup"
+            case 'completed':
+              return "Completed"
+            case 'cancelled':
+              return "Cancelled"
+          }})()}
+        </span>
+      </div>
+
+      <div className="border-t border-gray-100 pt-4 mt-3">
+        <h4 className="font-medium text-gray-700 mb-3 flex items-center">
+          <svg className="w-4 h-4 mr-2 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+          </svg>
+          Order Items
+        </h4>
+        <div className="space-y-2 mb-4">
+          {order.items.map((item, index) => (
+            <div key={index} className="flex justify-between items-center py-1 px-2 hover:bg-gray-50 rounded">
+              <div className="flex items-center">
+                <span className="text-gray-600">{item.quantity} ×</span>
+                <span className="ml-2 font-medium text-gray-800">{item.name}</span>
+              </div>
+              <span className="text-gray-700">₹{(item.price * item.quantity).toFixed(2)}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex justify-end items-center pt-3 border-t border-gray-100">
+        <div className="text-right">
+          <p className="text-sm text-gray-500">Total Amount</p>
+          <p className="text-lg font-bold text-orange-600">₹{order.totalAmount.toFixed(2)}</p>
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
+      )}
+
+    </div>
+  );
+};
+
 
 // Main App Component
 function App() {
@@ -1017,6 +1223,8 @@ function App() {
         return <OrderPage />;
       case 'login':
         return <LoginPage setCurrentPage={setCurrentPage} />;
+      case 'pastOrders':
+        return <PastOrdersPage setCurrentPage={setCurrentPage} />;
       case 'register':
         return <RegisterPage setCurrentPage={setCurrentPage} />;
       default:
@@ -1029,7 +1237,7 @@ function App() {
       {/* Added w-screen and min-w-screen to ensure the App container takes full viewport width */}
       <div className="App bg-gray-900 min-h-screen flex flex-col w-screen min-w-screen">
         <Navbar currentPage={currentPage} setCurrentPage={setCurrentPage} />
-        <div className="flex-grow"> {/* This div will take up remaining vertical space */}
+        <div className="flex-grow z-0"> {/* This div will take up remaining vertical space */}
           {renderPage()}
         </div>
       </div>
