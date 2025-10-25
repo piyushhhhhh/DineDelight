@@ -1027,7 +1027,7 @@ function App() {
   return (
     <AuthProvider>
       {/* Added w-screen and min-w-screen to ensure the App container takes full viewport width */}
-      <div className="App bg-gray-100 min-h-screen flex flex-col w-screen min-w-screen">
+      <div className="App bg-gray-900 min-h-screen flex flex-col w-screen min-w-screen">
         <Navbar currentPage={currentPage} setCurrentPage={setCurrentPage} />
         <div className="flex-grow"> {/* This div will take up remaining vertical space */}
           {renderPage()}
