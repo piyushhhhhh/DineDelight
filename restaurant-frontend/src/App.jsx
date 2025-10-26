@@ -25,7 +25,7 @@ const AuthProvider = ({ children }) => {
   // Login function - NOW USING ACTUAL API CALL
   const login = async (email, password) => { // Changed username to email for backend compatibility
     try {
-      const response = await fetch('http://localhost:5001/api/auth/login', {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -48,7 +48,7 @@ const AuthProvider = ({ children }) => {
   // Register function - NOW USING ACTUAL API CALL
   const register = async (username, email, password) => {
     try {
-      const response = await fetch('http://localhost:5001/api/auth/register', {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, email, password }),
@@ -80,7 +80,7 @@ const AuthProvider = ({ children }) => {
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          const response = await fetch('http://localhost:5001/api/auth/me', {
+          const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/me`, {
             headers: { 'Authorization': `Bearer ${token}` }
           });
           const data = await response.json();
@@ -550,7 +550,7 @@ const MenuPage = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await fetch('http://localhost:5001/api/menu');
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/menu`);
         console.log('Menu API Response Status:', response.status); // Debugging
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -642,7 +642,7 @@ const ReservationPage = () => {
 
     try {
       const token = localStorage.getItem('token'); // Get token
-      const response = await fetch('http://localhost:5001/api/reservations', {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/reservations`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -770,7 +770,7 @@ const OrderPage = () => {
       try {
         setLoadingMenu(true);
         setMenuError(null);
-        const response = await fetch('http://localhost:5001/api/menu');
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/menu`);
         console.log('OrderPage Menu API Response Status:', response.status); // Debugging
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -865,7 +865,7 @@ const OrderPage = () => {
       }));
 
       const token = localStorage.getItem('token'); // Get token
-      const response = await fetch('http://localhost:5001/api/orders', { // Uncommented API call
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/orders`, { // Uncommented API call
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1055,7 +1055,7 @@ const PastOrdersPage = ({ setCurrentPage }) => {
     const fetchOrders = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:5001/api/orders/pastOrders', {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/orders/pastOrders`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
